@@ -1,10 +1,13 @@
 ---
 layout: page
-title: Looooooog
-permalink: /Looooooog/
+title: Daily
+permalink: /Daily report/
 ---
 Daily
 <!--more-->
+# AD2021-08-01
+	* build this blog 
+	
 # AD2021-08-01
 	* kernel double fetch finished
 	* kernel side-channel finished
