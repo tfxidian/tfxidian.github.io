@@ -5,6 +5,7 @@ tags: kvm
 layout: post
 ---
 
+
 在“KVM Run Process之Qemu核心流程”一文中讲到Qemu通过KVM_RUN调用KVM提供的API发起KVM的启动，从这里进入到了内核空间运行，本文主要讲述内核中KVM关于VM运行的核心调用流程,所使用的内核版本为linux3.15。
 
 ## KVM核心流程
