@@ -196,4 +196,4 @@ Guest的进入；
 总而言之，KVM与Qemu的工作是为了确保Guest的正常运行，通过各种异常的处理，使Guest无需感知其运行的虚拟环境。
 
 附图：
-![](../pic/kvm-run.png)
+![](https://github.com/tfxidian/tfxidian.github.io/blob/master/pic/kvm-run.png)
