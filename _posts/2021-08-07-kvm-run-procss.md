@@ -1,5 +1,5 @@
 ---
-title: KVM Run Process之KVM核心流程
+title: [转]KVM Run Process之KVM核心流程
 date: 2021-08-07 15:55:50
 tags: kvm
 layout: post
@@ -196,4 +196,6 @@ Guest的进入；
 总而言之，KVM与Qemu的工作是为了确保Guest的正常运行，通过各种异常的处理，使Guest无需感知其运行的虚拟环境。
 
 附图：
-![](https://github.com/tfxidian/tfxidian.github.io/blob/master/pic/kvm-run.png)
+![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/kvm-run.png)
+
+[原文地址](https://royhunter.github.io/2014/07/12/KVM_RUN_PROCESS2/)
