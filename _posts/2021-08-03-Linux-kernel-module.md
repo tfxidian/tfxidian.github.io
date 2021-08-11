@@ -71,7 +71,7 @@ MODULE_LICENSE("GPL");
 
 ## Passing Command Line Arguments to a Module
 
-···
+
 ```
 #include <linux/module.h>
 #include <linux/moduleparam.h>
@@ -123,4 +123,91 @@ module_init(hello_5_init);
 module_exit(hello_5_exit);
 ```
 
-`insmod hello-5.o mystring="bebop" mybyte=255 myintArray=-1`
+输入：`insmod hello-5.o mystring="bebop" mybyte=255 myintArray=-1`
+
+上面的例子看着不叫乱，来个简化版的：
+
+```
+#include<linux/kernel.h>
+#include<linux/module.h>
+#include<linux/init.h>
+#include<linux/stat.h>
+#include<linux/moduleparam.h>
+
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("FTANG");
+
+static int myint = 100;
+module_param(myint, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+
+static int __init hello_param_init(void){
+	pr_info("hello param.\n");
+	pr_info("myint value is : %d", myint);
+	return 0;
+}
+
+static void __exit hello_param_exit(void){
+	pr_info("param exit.\n");
+}
+
+module_init(hello_param_init);
+module_exit(hello_param_exit);
+
+```
+下面是输出结果：
+```
+[158615.967936] hello param.
+[158615.967938] myint value is : 888
+[158632.787529] param exit.
+```
+
+## Modules Spanning Multiple Files
+
+接下来进入到多个文件的内核模块编写了，其实也很简单。
+
+假设分为两部分：start.c stop.c
+写法分别如下：
+
+```
+// start.c
+#include<linux/kernel.h>
+#include<linux/module.h>
+
+int init_module(void){
+	pr_info("hello, this is starting part.\n");
+	return 0;
+}
+
+MODULE_LICENSE("GPL");
+```
+
+```
+//stop.c
+#include<linux/kernel.h>
+#include<linux/module.h>
+
+void cleanup_module(){
+	pr_info("this is the end part.\n");
+}
+
+
+MODULE_LICENSE("GPL");
+
+```
+
+写法看起来其实也差不多，只不过把之前的例子分开了。
+
+然后Makefile文件有一点变化：
+```
+obj-m += startstop.o
+startstop-objs := start.o stop.o
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+
+```
+
+到这里就是简单的多文件写法了。
