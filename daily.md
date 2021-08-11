@@ -6,6 +6,10 @@ permalink: /Daily report/
 Daily
 <!--more-->
 
+# AD2021-08-11
+	* study linux kernel module.
+	* decide to study seccomp and computer architecture. 
+
 # AD2021-08-10
 	* get up early and study linux kernel module. 
 
