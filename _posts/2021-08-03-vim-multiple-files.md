@@ -6,9 +6,13 @@ layout: post
 ---
 
 在终端里输入 
-vim file1 file2 ... filen便可以打开所有想要打开的文件
+```
+vim file1 file2 ... filen
+```
+便可以打开所有想要打开的文件
 同时显示多个文件：
-:split
+`
+`:split
 :vsplit filen
-
-切换Ctrl+w+w
+`
+切换命令Ctrl+w+w
