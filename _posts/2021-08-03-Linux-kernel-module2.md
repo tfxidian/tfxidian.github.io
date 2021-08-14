@@ -173,5 +173,5 @@ MODULE_LICENSE("GPL");
  ```
 
  下面是输出结果：
- ![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/chardev.PNG)
+ ![](https://github.com/tfxidian/tfxidian.github.io/blob/master/pic/chardev.png)
 
