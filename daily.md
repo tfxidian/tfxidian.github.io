@@ -7,6 +7,10 @@ Daily
 <!--more-->
 
 # AD2021-08-11
+	* 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
+  
+
+# AD2021-08-11
 	* study linux kernel module.
 	* decide to study seccomp and computer architecture. 
 
