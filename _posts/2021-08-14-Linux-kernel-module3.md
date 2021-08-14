@@ -1,177 +1,67 @@
 ---
-title: Linux kernel module learning tutorial(2)
-date: 2021-08-11 23:55:50
+title: Linux kernel module learning tutorial(3)
+date: 2021-08-14 16:15:50
 tags: Linux, kernel module
 layout: post
 ---
 
-## 预备知识
 
-### 模块是怎么开始和结束的
-程序通常由main函数开始，历经一系列指令终止。内核模块的各种方式不太一样，一个模块通常由init_module或者你在module_init中制定的函数开始，这是内核模块的入口。它告诉内核这个模块提供了什么功能，并设置内核在需要时运行模块的函数
+ ## The /proc File System
+ proc文件系统包含一个虚拟的文件系统。它在磁盘上不存在。相反，内核在内存中创建它。它用于提供关于系统的信息(最初是关于进程的，因此得名)。
+ ```
+proc/1
+一个包含进程号1的目录。每个进程在/proc下面都有一个目录，目录名是进程标识号。
+/proc/cpuinfo
+关于处理器的信息，例如它的类型、制造、型号和性能。
+/proc/devices
+配置到当前运行内核中的设备驱动程序列表。
+/proc/dma
+显示目前正在使用的DMA信道。
+/proc/filesystems
+配置到内核中的文件系统。
+ ```
 
+这里有一个简单的例子，展示了如何使用/proc文件。
+这算是/proc文件系统的HelloWorld。
+它由三部分组成:在函数init_module中创建文件/proc/helloworld，在回调函数procfile_read中读取文件/proc/helloworld时返回一个值(和一个缓冲区)，在函数cleanup_module中删除文件/proc/helloworld。
+当使用proc_create函数加载模块时，会创建/proc/helloworld，返回值是一个结构体proc_dir_entry，它将用于配置文件/proc/helloworld(例如，该文件的所有者)，null返回值意味着创建失败
 
-### 设备驱动
-模块的一类是设备驱动程序，它为硬件(如串行端口)提供功能。在Unix上，每一块硬件都由位于/dev中的一个名为设备文件的文件表示，该文件提供了与硬件通信的方法。设备驱动程序代表用户程序提供通信。
-
-设备分为两类:字符设备和块设备。不同之处在于块设备有一个请求缓冲区，因此它们可以选择响应请求的最佳顺序。这在存储设备的情况下很重要，在存储设备中，读或写彼此靠近的扇区比读或写那些相距较远的扇区更快。另一个区别是块设备只能以块的形式接收输入和返回输出(块的大小可以根据设备的不同而变化)，而字符设备可以使用任意多或少的字节。世界上大多数设备都是字符化的，因为它们不需要这种类型的缓冲，而且它们也不使用固定的块大小。
-通过查看ls -l输出中的第一个字符，可以判断设备文件是用于块设备还是用于字符设备。如果是' b '，那么它是块设备，如果是' c '，那么它是字符设备。
-
-## Character Device drivers
-### The file_operations Structure
-file_operations结构在include/linux/fs.h中定义，并保存着驱动程序定义的函数的指针，这些函数在设备上执行各种操作。结构的每个字段对应于驱动程序为处理请求的操作而定义的某个函数的地址。
-例如，每个字符驱动程序都需要定义一个从设备读取的函数。file_operations结构保存了执行该操作的模块函数的地址
-```
-    struct file_operations {
-       struct module *owner;
-       loff_t (*llseek) (struct file *, loff_t, int);
-       ssize_t (*read) (struct file *, char *, size_t, loff_t *);
-       ssize_t (*write) (struct file *, const char *, size_t, loff_t *);
-       int (*readdir) (struct file *, void *, filldir_t);
-       unsigned int (*poll) (struct file *, struct poll_table_struct *);
-       int (*ioctl) (struct inode *, struct file *, unsigned int, unsigned long);
-       int (*mmap) (struct file *, struct vm_area_struct *);
-       int (*open) (struct inode *, struct file *);
-       int (*flush) (struct file *);
-       int (*release) (struct inode *, struct file *);
-       int (*fsync) (struct file *, struct dentry *, int datasync);
-       int (*fasync) (int, struct file *, int);
-       int (*lock) (struct file *, int, struct file_lock *);
-    	 ssize_t (*readv) (struct file *, const struct iovec *, unsigned long,
-          loff_t *);
-    	 ssize_t (*writev) (struct file *, const struct iovec *, unsigned long,
-          loff_t *);
-    };
-```
-有些操作不是由驱动程序实现的。例如，处理显卡的驱动程序不需要从目录结构中读取数据。有一个gcc扩展可以更方便地对这个结构进行赋值。你会在现代驱动上看到它，可能会让你大吃一惊。这是给结构赋值的新方法:
-```
-    struct file_operations fops = {
-       read: device_read,
-       write: device_write,
-       open: device_open,
-       release: device_release
-    };
-```
-
-然而，也有一种C99的方式来分配结构的元素，这显然比使用GNU扩展更受欢迎。gcc支持新的C99语法。你应该使用这个语法，以防有人想要移植你的驱动程序。这将有助于兼容性:
-```
-    struct file_operations fops = {
-       .read = device_read,
-       .write = device_write,
-       .open = device_open,
-       .release = device_release
-    };
-```
-
-直接上完整的例子
 
 ```
-#include<linux/kernel.h>
-#include<linux/module.h>
-#include<linux/fs.h>
-#include<asm/uaccess.h>
-#include<asm/errno.h>
-#define DEVICE_NAME "chardev"
-#define BUF_LEN 80
-#define MODULE
-#define LINUX
-#define __KERNEL__
+#include <linux/module.h>
+#include <linux/proc_fs.h>
+#include <linux/seq_file.h>
 
-int init_module(void);
-void cleanup_module(void);
+static int hello_proc_show(struct seq_file *m, void *v) {
+  seq_printf(m, "Hello proc!\n");
+  return 0;
+}
 
-static int device_open(struct inode*, struct file*);
-static int device_release(struct inode*, struct file*);
+static int hello_proc_open(struct inode *inode, struct  file *file) {
+  return single_open(file, hello_proc_show, NULL);
+}
 
-static ssize_t device_read(struct file*, char*, size_t, loff_t*);
-static ssize_t device_write(struct file*, const char*, size_t, loff_t*);
-
-static int Major;
-static int Device_Open = 0;
-
-static char msg[BUF_LEN];
-static char *msg_Ptr;
-
-static struct file_operations fops ={
-	.read = device_read,
-	.write = device_write,
-	.open = device_open,
-	.release = device_release,
+static const struct file_operations hello_proc_fops = {
+  .owner = THIS_MODULE,
+  .open = hello_proc_open,
+  .read = seq_read,
+  .llseek = seq_lseek,
+  .release = single_release,
 };
 
-int init_module(void)
-{
-	Major = register_chrdev(0, DEVICE_NAME, &fops);
-	if(Major < 0){
-		printk("Registering the character device failed with %d", Major);
-	}
-
-	printk("<1> I was assigned major number %d.\n", Major);
-
-
+static int __init hello_proc_init(void) {
+  proc_create("hello_proc", 0, NULL, &hello_proc_fops);
+  return 0;
 }
 
-
-void cleanup_module(void)
-{
-	pr_info("this is cleanup in chardev.\n");
-	unregister_chrdev(Major, DEVICE_NAME);
-	//if(ret<0) printk("Error in unregister chardev. %d", ret);
-	}
-
-static int device_open(struct inode *inode, struct file *file)
-{
-	static int counter = 0;
-	if(Device_Open) return -EBUSY;
-
-	Device_Open++;
-	sprintf(msg,"I already told you %d times hello\n", Device_Open);
-	msg_Ptr = msg;
-	return 0;
+static void __exit hello_proc_exit(void) {
+  remove_proc_entry("hello_proc", NULL);
 }
-
-static int device_release(struct inode *inode, struct file*file){
-
-	Device_Open --;
-//	MOD_DEC_USE_COUNT;
-	return 0;
-}
-
-static ssize_t device_read(struct file* filep, char* buffer, size_t length, loff_t* offset)
-{
-	if(*msg_Ptr ==0) return 0;
-	int bytes_read = 0;
-	while(length && *msg_Ptr){
-		put_user(*(msg_Ptr++), buffer++);
-		length--;
-		bytes_read++;
-	}
-	return bytes_read;
-}
-
-
-static ssize_t device_write(struct file *filep, const char *buffer, size_t len, loff_t *off)
-{
-	printk("sorry this operation is not supported now.\n");
-	return -EINVAL;
-}
-
 
 MODULE_LICENSE("GPL");
-
+module_init(hello_proc_init);
+module_exit(hello_proc_exit);
 ```
 
-注意：如果将主设备号0传递给register_chrdev，则返回值将是动态分配的主设备号
-
-中间遇到的问题：
-在编译字符设备驱动文件时出现了一个 error: void value not ignored as it ought to be 错误。问题出在：
- `int ret = unregister_chrdev(Major,DEVICE_NAME); `
-
- 改为：
- ```
- unregister_chrdev ( Major, DEVICE_NAME );
- ```
-
- 下面是输出结果：
- ![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/chardev.png)
-
+insmod myproc.ko之后，cat /proc/hello_proc,即可得到输出：
+`Hello proc!`
