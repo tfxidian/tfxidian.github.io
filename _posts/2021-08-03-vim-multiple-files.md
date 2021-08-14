@@ -16,3 +16,4 @@ vim file1 file2 ... filen
 :vsplit filen
 `
 切换命令Ctrl+w+w
+
