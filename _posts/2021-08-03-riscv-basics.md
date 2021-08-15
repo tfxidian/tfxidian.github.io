@@ -1,10 +1,40 @@
 ---
-title: ERIM:Secure, Efficient In-process Isolation with Protection Keys (MPK)
-date: 2021-08-03 23:55:50
-tags: misc
+title: RISC-V basics
+date: 2021-08-15 9:55:50
+tags: RISC-V
 layout: post
 ---
-[ERIM: Secure, Efficient In-process Isolation with
-Protection Keys (MPK)][1]
 
-[1]: https://www.usenix.org/system/files/sec19-vahldiek-oberwagner_0.pdf
+## RISC-V简介
+不同的cpu执行不同的指令集。特定CPU实现的指令集称为指令集体系结构(ISA)。
+
+早期的趋势是在新的cpu中添加越来越多的指令来完成复杂的操作。
+RISC哲学
+- 保持指令集小而简单，可以更容易地构建快速硬件
+- 让软件通过组合简单的操作来完成复杂的操作
+  
+RISC-V
+- 新的开源、无许可证ISA规范
+- 适用于所有级别的计算系统，从微控制器到超级计算机
+- 32-bit, 64-bit, and 128-bit variants
+
+为什么用RISC-V而不是Intel 80x86?
+
+## 指令集架构的元素：寄存器
+
+### 指令集
+特定体系结构的指令集(例如:RISC-V)由汇编语言表示，每一行汇编代码代表计算机的一条指令。
+
+不像高级语言比如C或Java，程序集不能使用变量。为什么呢?为了保持简单的硬件。
+
+汇编语言的操作数是就出去，有限数量的寄存器直接潜入到硬件。
+优点:由于寄存器直接在硬件中，所以速度非常快
+缺点:由于寄存器是在硬件中，所以它们的数量是预先确定的
+
+32 registers in RISC-V：Each RISC-V register is 32 bits wide (in RV32 variant)，Groups of 32 bits called a word in RV32.
+寄存器从0到31编号由数字x0-x31表示,x0比较特殊，总是保持0值，所以只有31个寄存器能保存变量。
+
+
+在汇编语言中，每一条语句(称为指令)，只执行简单命令列表中的一个，与C语言(和大多数其他高级语言)不同，每一行汇编代码最多包含一条指令。
+
+
