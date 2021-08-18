@@ -59,3 +59,136 @@ public:
 
 
 
+# 动态规划
+
+## 5、最长回文子串
+给你一个字符串 s，找到 s 中最长的回文子串。
+
+示例 1：
+
+输入：s = "babad"
+输出："bab"
+解释："aba" 同样是符合题意的答案。
+示例 2：
+
+输入：s = "cbbd"
+输出："bb"
+
+链接：https://leetcode-cn.com/problems/longest-palindromic-substring
+
+思路：
+考虑用动态规划，假设s的长度为len, 
+d[i]表示字符串前i个字符的最长回文字符长度，可是这种方法只能得到最长回文子串的长度，不能得到最长回文子串本身。
+if((i+1%2) ==0) d[i+1] = d[i];//如果i前面有奇数个，那么加上s[i+1]也不会增加回文数。比如前面是aba，无论再加什么回文数也不增加
+else if(s[i+1] ==s[0])//思路错误，如果i前面有奇数给，增加s[i+1]是可能增加回文数的，比如前面是cba,如果再来个b就可以增加回文数。
+
+换个思路：d[i]表示字符串前i个字符的最长回文字符长度，假如回文字符长度为m,那么假如再增加一个字符，即s[i+1],会有什么可能性呢？
+
+d[0] = 0；
+d[1] = 1；
+d[2] = 1;
+
+abc  abcd  m
+ab    aba
+a     ac
+bac   baca
+abcb   abcba
+
+if(s[i+1] == s[i-d[i]-1]) d[i+1] = d[i]+1 //根据以上观察简单列出
+else d[i+1] =d[i]
+//if(s[i] == s[i-d[i-1]-1]) d[i+1] = d[i]+1 //根据以上观察简单列出
+d[i] = m;
+d[i+1] =?
+
+for(int i = 2; i< s.length; i++){
+    if(s[i+1] == s[i-d[i]-1]) d[i+1] = d[i]+1 ;
+    else d[i+1] = d[i]
+}
+
+
+```
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        string str;
+        int len = s.length();
+        vector<int> dp(len, 0);
+        dp[1] = 1;
+
+        for(int i = 2; i<len; i++){
+            cout<<i<<endl;
+            if(s[i] == s[i-dp[i-1]-1]){
+                dp[i] = dp[i-1]+1;
+                cout<<"dp "<<dp[i]<<endl;
+            }else{
+                dp[i] = dp[i-1];
+                cout<<"dp "<<dp[i]<<endl;
+            }
+        }
+        int index;
+        for(int i = 0; i< len; i++){
+            if(dp[i] == dp[len-1]){
+                index = i;
+            }
+        }
+        for(int j = index-dp[len-1]+1; j<=index; j++){
+            str.append(s[j]);
+        }
+
+        return str;
+    }
+};
+```
+
+事实证明，上面的方法根本不对，思路就错了，下面先考虑一下暴力破解的思路:
+- 找到所有子串
+- 判断是否是回文子串
+- 如果是回文子串且长度大于之前的，记录下来。
+  
+```
+class Solution {
+public:
+    bool isPalindrome(string s){
+
+        int len = s.length();
+        for (int i = 0; i < len/2; i++)
+        {
+            if (s[i] != s[len-i-1])
+            {
+                return false;
+            }
+            
+        }
+        return true;
+    }
+
+    string longestPalindrome(string s) {
+        string ans = "";
+        int max = 0;
+        int length = s.length();
+        if (length < 2)
+        {
+            return s;
+        }
+        
+        for (int  i = 0; i < length; i++) {
+            for (int j = 0; j <= length-i; j++) {
+                string temp = s.substr(i,j);//s.substr(pos, n)
+                if (isPalindrome(temp)&& temp.length() > max)
+                {
+                    ans = temp;
+                    max = temp.length();
+                }
+            }
+        }
+    return ans;
+    }
+};
+```
+在上面的代码中，我用到了substring，由于Java和C++的差异，让我折腾了好久。
+Java中：
+`public String substring(int beginIndex, int endIndex)`
+C++中：
+` s.substr(pos, len)`
+可以看到Java中，参数分别为首和尾+1，而C++中，参数分别为首和取子串长度。
+差异还是比较大的。结果我弄混淆了。

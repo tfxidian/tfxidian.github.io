@@ -125,7 +125,7 @@ module_exit(hello_5_exit);
 
 输入：`insmod hello-5.o mystring="bebop" mybyte=255 myintArray=-1`
 
-上面的例子看着不叫乱，来个简化版的：
+上面的例子看着比较乱，来个简化版的：
 
 ```
 #include<linux/kernel.h>
