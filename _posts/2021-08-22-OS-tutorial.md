@@ -1,0 +1,10 @@
+---
+title: OS tutorial
+date: 2021-08-15 9:55:50
+tags: os,kernel
+layout: post
+---
+
+## OS-tutorial
+
+ ![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/OS-tutorial.png)
