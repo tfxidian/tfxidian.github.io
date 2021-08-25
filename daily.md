@@ -7,6 +7,10 @@ Daily
 <!--more-->
 
 # AD2021-08-11
+	* 最近心情不是很好，老是想着什么都做，可是什么都只做了一部分。还是要明确一下自己想要什么，结合目标去做什么事情。要不然东一榔头西一棒槌，什么都做不好。
+	* 今天晚上看了脱口秀大会，挺喜欢张骏说的。
+
+# AD2021-08-11
 	* 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
 	* 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
   
