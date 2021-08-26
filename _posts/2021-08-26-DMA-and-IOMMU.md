@@ -5,15 +5,11 @@ tags: DMA, IOMMU, attack
 layout: post
 ---
 
-# IOMMU and DMA attacks
-
-
-
 ## Direct Memory Access (DMA)
 
 
 
-![](D:\myblog\tfxidian.github.io\pic\DMA.PNG)
+![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/DMA.PNG)
 
 
 
