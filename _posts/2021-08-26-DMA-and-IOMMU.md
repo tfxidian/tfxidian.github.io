@@ -44,3 +44,42 @@ layout: post
   - But a driver cannot set up DMA to the bus address for “Y” without the help of IOMMU 
 - IOMMU translates “Z” to “Y” 
 - To do DMA, driver can call dma_map_single() with “X” to set up the needed IOMMU for “Z
+
+
+
+```
+               CPU                  CPU                  Bus
+             Virtual              Physical             Address
+             Address              Address               Space
+              Space                Space
+
+            +-------+             +------+             +------+
+            |       |             |MMIO  |   Offset    |      |
+            |       |  Virtual    |Space |   applied   |      |
+          C +-------+ --------> B +------+ ----------> +------+ A
+            |       |  mapping    |      |   by host   |      |
+  +-----+   |       |             |      |   bridge    |      |   +--------+
+  |     |   |       |             +------+             |      |   |        |
+  | CPU |   |       |             | RAM  |             |      |   | Device |
+  |     |   |       |             |      |             |      |   |        |
+  +-----+   +-------+             +------+             +------+   +--------+
+            |       |  Virtual    |Buffer|   Mapping   |      |
+          X +-------+ --------> Y +------+ <---------- +------+ Z
+            |       |  mapping    | RAM  |   by IOMMU
+            |       |             |      |
+            |       |             |      |
+            +-------+             +------+
+```
+
+qemu/kvm虚拟机现在使用VFIO来分配设备。VFIO利用IOMMU的DMA重映射在VM中执行DMA，但它不使用中断重映射，因为它与内核IMO中的irqfd相比效率不高
+
+![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/3.PNG)
+
+设备总线用于在根表中建立索引，根表大小为4kbyte，包含256个根表项。根表项包含上下文表指针，它引用由根表项标识的总线上所有设备的上下文表。
+
+引用
+
+[IOMMU](http://events17.linuxfoundation.org/sites/events/files/slides/iommu-new_0.pdf)
+
+[DMA API](https://www.kernel.org/doc/Documentation/DMA-API-HOWTO.txt)
+
