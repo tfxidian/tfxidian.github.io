@@ -8,6 +8,20 @@ Daily
 
 
 
+# 2021-09-03
+
+20hour Rules
+
+- Deconstruct the skill
+
+-  Learn enough to self-correct 
+
+- Remove practice barriers 
+
+- Practice at least 20hours
+
+  
+
 # AD2021-09-2
 	* 又是一个月了，过的好快。感觉过去一段时间工作上碌碌无为，杂七杂八的东西倒是学了不少。接下来要把基础的东西好好总结一下：C++、Linux内存管理这两块最近优先级高一些。
 
