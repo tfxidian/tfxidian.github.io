@@ -1,5 +1,5 @@
 ---
-title: linux kernel mm: physics memory
+title: linux kernel physics memory
 date: 2021-09-03 0:33:50
 tags: linux, kernel
 layout: post

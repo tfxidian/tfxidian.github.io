@@ -5,16 +5,13 @@ tags: linux, kernel
 layout: post
 ---
 
-## Linux kernel mm
+- 通过熟悉Linux系统中常用的内存监测工具来感性地认识和了解内存管理
 
-- 实验1：查看系统内存信息
-
-  - 通过熟悉Linux系统中常用的内存监测工具来感性地认识和了解内存管理
 - 查看系统内存信息
 
 
 
-#### top命令
+### top命令
 
 ```
 top - 20:39:01 up  1:58,  1 user,  load average: 0.20, 0.10, 0.15
@@ -49,7 +46,9 @@ KiB Swap:  2097148 total,  1781756 free,   315392 used.  2298300 avail Mem
 
 
 
-#### free命令：
+
+
+### free命令：
 
 命令分类：
 
@@ -80,7 +79,7 @@ available : 可用内存大小
 
 
 
-#### cat /proc/meminfo 命令：
+### cat /proc/meminfo 命令：
 
 ```
 MemTotal:        3049524 kB
