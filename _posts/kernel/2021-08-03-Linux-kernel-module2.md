@@ -5,9 +5,12 @@ tags: Linux, kernel module
 layout: post
 ---
 
-## 预备知识
+
+
+
 
 ### 模块是怎么开始和结束的
+
 程序通常由main函数开始，历经一系列指令终止。内核模块的各种方式不太一样，一个模块通常由init_module或者你在module_init中制定的函数开始，这是内核模块的入口。它告诉内核这个模块提供了什么功能，并设置内核在需要时运行模块的函数
 
 
@@ -190,7 +193,3 @@ proc/1
 配置到内核中的文件系统。
  ```
 
-这里有一个简单的例子，展示了如何使用/proc文件。
-这算是/proc文件系统的HelloWorld。
-它由三部分组成:在函数init_module中创建文件/proc/helloworld，在回调函数procfile_read中读取文件/proc/helloworld时返回一个值(和一个缓冲区)，在函数cleanup_module中删除文件/proc/helloworld。
-当使用proc_create函数加载模块时，会创建/proc/helloworld，返回值是一个结构体proc_dir_entry，它将用于配置文件/proc/helloworld(例如，该文件的所有者)，null返回值意味着创建失败

@@ -5,11 +5,11 @@ tags: linux, kernel
 layout: post
 ---
 
-## Linux kernel之物理内存信息
 
-- 实验2：获取系统的物理内存信息
 
-  ![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/mm_lab2.PNG)
+实验2：获取系统的物理内存信息
+
+![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/mm_lab2.PNG)
 
 #### 获取物理内存的页面数量
 

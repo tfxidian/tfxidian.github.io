@@ -5,7 +5,7 @@ tags: Linux kernel
 layout: post
 ---
 
-## basics of creating, compiling modules.
+### basics of creating, compiling modules.
 
 ```
 
@@ -69,7 +69,7 @@ MODULE_LICENSE("GPL");
 使用了新的写法，用了自定义的init和exit函数。也包含了新的头文件<linux/init.h>。
 
 
-## Passing Command Line Arguments to a Module
+### Passing Command Line Arguments to a Module
 
 
 ```
@@ -162,7 +162,7 @@ module_exit(hello_param_exit);
 [158632.787529] param exit.
 ```
 
-## Modules Spanning Multiple Files
+### Modules Spanning Multiple Files
 
 接下来进入到多个文件的内核模块编写了，其实也很简单。
 
