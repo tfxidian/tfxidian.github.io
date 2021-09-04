@@ -123,3 +123,17 @@ kmalloc函数与用户空间的malloc一族函数非常类似, 只不过它多�
 [10391.082522] vmalloc start addres 0xc6abb000
 ```
 
+
+
+## Buddy System
+
+### 算法原理
+
+伙伴系统，专门用来分配以页为单位的大内存，且分配的内存大小必须是2的整数次幂。这里的幂次叫做 `order`，例如一页的大小是4K，order为1的块就是 `2^1 * 4K = 8K`。每次分配时都寻找对应order的块，如果没有，就将order更高的块分裂为2个order低的块。释放时，如果两个order低的块是分裂出来的，就将他们合并为更高order的块。
+
+在Linux中，使用buddy system分配的底层API主要有 `get_free_pages` 和 `alloc_pages`，传入的参数都是order，还有一些flag位.
+
+值得注意的是这样分配得到的虚拟地址和物理地址都是连续的，返回的地址可以使用 `virts_to_phys` 或者 `__pa` 宏转换为物理地址，实际操作也就是加上了一个偏移而已。
+
+可以通过 `/proc/buddyinfo` 和 `/proc/pagetypeinfo` 来查看相关的情况.
+
