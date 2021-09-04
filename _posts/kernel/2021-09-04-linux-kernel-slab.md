@@ -1,5 +1,5 @@
 ---
-title: linux kernel memmory allocate
+title: linux kernel memmory slab
 date: 2021-09-03 0:33:50
 tags: linux, kernel
 layout: post
@@ -99,4 +99,15 @@ void * kmalloc (size_t size, gfp_t flags);
 [ 5569.352925] kmem_cache_alloc ok 
 [ 5569.391877] destroyed my_cache
 ```
+
+
+
+
+
+在linux内核中伙伴系统用来管理物理内存，其分配的单位是页，但是向用户程序一样，内核也需要动态分配内存，而伙伴系统分配的粒度又太大。由于内核无法借助标准的C库，因而需要别的手段来实现内核中动态内存的分配管理，linux采用的是slab分配器。slab分配器不仅可以提供动态内存的管理功能，而且可以作为经常分配并释放的内存的缓存。通过slab缓存，内核能够储备一些对象，供后续使用。需要注意的是slab分配器只管理内核的常规地址空间
+
+
+**采用了slab分配器后，在释放内存时，slab分配器将释放的内存块保存在一个列表中，而不是返回给伙伴系统。在下一次内核申请同样类型的对象时，会使用该列表中的内存**
+
+![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/slab2.png)
 
