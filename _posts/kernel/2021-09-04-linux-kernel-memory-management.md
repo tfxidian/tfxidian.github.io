@@ -16,7 +16,7 @@ layout: post
  所以linux申请内存是一个二级分配的过程。
  拿到2^n个内存页(4k)，应该如何去管理
 
-![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/libc_buddy_slab.PGN)
+![](https://github.com/tfxidian/tfxidian.github.io/raw/master/pic/libc_buddy_slab.PNG)
 
 这张图是宋宝华老师的PPT里面的一张截图，感觉看了这张图就已经解决了我心中的不少疑惑。之前只知道在访问的时候虚拟地址经过mmu访问物理地址。到底从用户态层面的申请的内存是怎么跟内核申请的串起来的呢？
 
