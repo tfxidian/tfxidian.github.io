@@ -2,7 +2,7 @@
 title: 万历十五年读书笔记
 date: 2021-09-04 21:55:50
 tags: book
-layout: book
+layout: post
 ---
 
 
