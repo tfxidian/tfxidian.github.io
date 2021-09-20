@@ -228,3 +228,36 @@ int main()
 }
 ```
 
+### C++ 相同class的object互为友元
+
+```C++
+#ifndef __COMPLEX_H__
+#define  __COMPLEX_H__
+ 
+#include <iostream>
+using namespace std;
+ 
+class complex{
+public:
+	complex(double a=0, double b=0):re(a),rs(b)
+	{}
+    
+    //这里直接访问传入参数的private数据
+	double func(const complex& param)
+	{
+		return param.re + param.rs;
+	}
+ 
+private:
+	double re, rs;
+};
+ 
+void Test_complex(){
+	complex a1(2,1);
+	complex a2;
+	std::cout<<a2.func(a1);   //输出为3
+	//std::cout<<a1.re;	//错误，不能访问
+}
+#endif
+```
+
